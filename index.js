@@ -11,6 +11,23 @@ app.get('/', (req, res) => {
   });
 });
 
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(500).json({
+    status: false,
+    message: err.message,
+    data: null
+  });
+});
+
+app.use((req, res, next) => {
+  res.status(404).json({
+    status: false,
+    message: `${req.method} ${req.url} is not registered`,
+    data: null
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is up and running at http://localhost:${port}`);
 });
