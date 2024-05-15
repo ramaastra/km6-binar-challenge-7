@@ -1,7 +1,10 @@
 require('dotenv').config();
 const express = require('express');
+const router = require('./router');
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.status(200).json({
@@ -10,6 +13,8 @@ app.get('/', (req, res) => {
     data: null
   });
 });
+
+app.use('/api/v1', router);
 
 app.use((err, req, res, next) => {
   console.log(err);
