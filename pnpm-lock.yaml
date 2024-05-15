@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@prisma/client':
+        specifier: 5.14.0
+        version: 5.14.0(prisma@5.14.0)
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -20,6 +23,15 @@ importers:
         version: 5.14.0
 
 packages:
+
+  '@prisma/client@5.14.0':
+    resolution: {integrity: sha512-akMSuyvLKeoU4LeyBAUdThP/uhVP3GuLygFE3MlYzaCb3/J8SfsYBE5PkaFuLuVpLyA6sFoW+16z/aPhNAESqg==}
+    engines: {node: '>=16.13'}
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
 
   '@prisma/debug@5.14.0':
     resolution: {integrity: sha512-iq56qBZuFfX3fCxoxT8gBX33lQzomBU0qIUaEj1RebsKVz1ob/BVH1XSBwwwvRVtZEV1b7Fxx2eVu34Ge/mg3w==}
@@ -291,6 +303,10 @@ packages:
     engines: {node: '>= 0.8'}
 
 snapshots:
+
+  '@prisma/client@5.14.0(prisma@5.14.0)':
+    optionalDependencies:
+      prisma: 5.14.0
 
   '@prisma/debug@5.14.0': {}
 
