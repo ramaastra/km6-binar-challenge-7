@@ -101,5 +101,22 @@ module.exports = {
     const { email } = req.body;
     req.flash('info', `Email sent to ${email}`);
     res.redirect('/forgot-password');
+  },
+  resetPassword: async (req, res, next) => {
+    try {
+      const { token } = req.query;
+      if (!token) {
+        res.status(400).json({
+          status: false,
+          message: 'Token must be provided',
+          data: null
+        });
+      }
+
+      req.flash('info', 'success');
+      res.redirect(`/reset-password?token=${token}`);
+    } catch (error) {
+      next(error);
+    }
   }
 };
