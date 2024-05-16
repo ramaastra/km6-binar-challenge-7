@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../setups/head') %>
+</head>
+<body>
+  <div class="container">
+    <h1>Reset Your Password</h1>
+    <form action="" method="post">
+      <input
+        type="password"
+        name="password"
+        placeholder="Enter a new password"
+        required
+        oninput="checkPasswordMatch()"
+      />
+      <input 
+        type="password"
+        name="confirm-password"
+        placeholder="Confirm Password"
+        required
+        oninput="checkPasswordMatch()" 
+      />
+      <p id="password-mismatch">Password doesn't match</p>
+      <button>Update Password</button>
+    </form>
+  </div>
+
+  <script>
+    const password = document.querySelector('input[name="password"]');
+    const confirmPassword = document.querySelector('input[name="confirm-password"]');
+    const passwordMismatchMessage = document.querySelector('#password-mismatch');
+    const submitButton = document.querySelector('button');
+
+    function checkPasswordMatch() {
+      if (password.value !== confirmPassword.value || !password.value && !confirmPassword.value) {
+        passwordMismatchMessage.style.display = 'block';
+        submitButton.disabled = true;
+        submitButton.type = 'none';
+        submitButton.style.cursor = 'not-allowed'
+        submitButton.style.backgroundColor = '#584f74'
+      } else {
+        passwordMismatchMessage.style.display = 'none';
+        submitButton.type = 'submit';
+        submitButton.disabled = false;
+        submitButton.style.cursor = 'pointer'
+        submitButton.style.backgroundColor = '#7f5af0'
+      }
+    }
+
+    document.onload = checkPasswordMatch();
+  </script>
+</body>
+</html>
