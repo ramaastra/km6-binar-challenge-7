@@ -102,15 +102,20 @@ module.exports = {
   sendResetPasswordLink: async (req, res, next) => {
     const { email } = req.body;
 
-    const { id, name } = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email },
       select: { id: true, name: true }
     });
 
-    const token = jwt.sign({ id }, process.env.JWT_SECRET);
+    if (!user) {
+      req.flash('info', 'invalid');
+      return res.redirect('/forgot-password');
+    }
+
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
     const baseUrl = `${req.protocol}://${req.get('host')}`;
     const html = renderHtml('forgot-password/email', {
-      name,
+      name: user.name,
       resetPasswordUrl: `${baseUrl}/reset-password?token=${token}`
     });
 
