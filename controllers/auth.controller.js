@@ -113,8 +113,51 @@ module.exports = {
         });
       }
 
-      req.flash('info', 'success');
-      res.redirect(`/reset-password?token=${token}`);
+      const { password } = req.body;
+      if (!password) {
+        res.status(400).json({
+          status: false,
+          message: `Field 'password' is required`,
+          data: null
+        });
+      }
+
+      jwt.verify(token, process.env.JWT_SECRET, async (error, data) => {
+        if (error) {
+          return res.status(401).json({
+            status: false,
+            message: 'Unauthorized',
+            data: null
+          });
+        }
+
+        const { email } = await prisma.user.findFirst({
+          where: { id: data.id },
+          select: { email: true }
+        });
+
+        if (!email) {
+          return res.status(400).json({
+            status: false,
+            message: 'Invalid token',
+            data: null
+          });
+        }
+
+        const hashedPassword = await generateHash(password);
+        await prisma.user.update({
+          data: { password: hashedPassword },
+          where: { email },
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        });
+
+        req.flash('info', 'success');
+        res.redirect(`/reset-password?token=${token}`);
+      });
     } catch (error) {
       next(error);
     }
