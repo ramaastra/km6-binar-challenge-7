@@ -9,10 +9,15 @@
       <% if (messages.info == 'invalid') { %>
           <h1>Invalid Token</h1>
           <p>Please try again</p>
+      <% } else if (messages.info == 'success') { %>
+          <svg class="w-6 h-6 text-gray-800 dark:text-red" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="#F5B61C" viewBox="0 0 24 24">
+            <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.8" d="m8.032 12 1.984 1.984 4.96-4.96m4.55 5.272.893-.893a1.984 1.984 0 0 0 0-2.806l-.893-.893a1.984 1.984 0 0 1-.581-1.403V7.04a1.984 1.984 0 0 0-1.984-1.984h-1.262a1.983 1.983 0 0 1-1.403-.581l-.893-.893a1.984 1.984 0 0 0-2.806 0l-.893.893a1.984 1.984 0 0 1-1.403.581H7.04A1.984 1.984 0 0 0 5.055 7.04v1.262c0 .527-.209 1.031-.581 1.403l-.893.893a1.984 1.984 0 0 0 0 2.806l.893.893c.372.372.581.876.581 1.403v1.262a1.984 1.984 0 0 0 1.984 1.984h1.262c.527 0 1.031.209 1.403.581l.893.893a1.984 1.984 0 0 0 2.806 0l.893-.893a1.985 1.985 0 0 1 1.403-.581h1.262a1.984 1.984 0 0 0 1.984-1.984V15.7c0-.527.209-1.031.581-1.403Z"/>
+          </svg>
+          <p>Your password has been updated!</p>
       <% } %>
     <% } else { %>
       <h1>Reset Your Password</h1>
-      <form action="" method="post">
+      <form action="/api/v1/auth/reset-password?token=<%= token %>" method="post">
         <input
           type="password"
           name="password"
@@ -33,29 +38,31 @@
     <% } %>
   </div>
 
-  <script>
-    const password = document.querySelector('input[name="password"]');
-    const confirmPassword = document.querySelector('input[name="confirm-password"]');
-    const passwordMismatchMessage = document.querySelector('#password-mismatch');
-    const submitButton = document.querySelector('button');
+  <% if (!messages.info) { %>
+    <script>
+      const password = document.querySelector('input[name="password"]');
+      const confirmPassword = document.querySelector('input[name="confirm-password"]');
+      const passwordMismatchMessage = document.querySelector('#password-mismatch');
+      const submitButton = document.querySelector('button');
 
-    function checkPasswordMatch() {
-      if (password.value !== confirmPassword.value || !password.value && !confirmPassword.value) {
-        passwordMismatchMessage.style.display = 'block';
-        submitButton.disabled = true;
-        submitButton.type = 'none';
-        submitButton.style.cursor = 'not-allowed'
-        submitButton.style.backgroundColor = '#584f74'
-      } else {
-        passwordMismatchMessage.style.display = 'none';
-        submitButton.type = 'submit';
-        submitButton.disabled = false;
-        submitButton.style.cursor = 'pointer'
-        submitButton.style.backgroundColor = '#7f5af0'
+      function checkPasswordMatch() {
+        if (password.value !== confirmPassword.value || !password.value && !confirmPassword.value) {
+          passwordMismatchMessage.style.display = 'block';
+          submitButton.disabled = true;
+          submitButton.type = 'none';
+          submitButton.style.cursor = 'not-allowed'
+          submitButton.style.backgroundColor = '#584f74'
+        } else {
+          passwordMismatchMessage.style.display = 'none';
+          submitButton.type = 'submit';
+          submitButton.disabled = false;
+          submitButton.style.cursor = 'pointer'
+          submitButton.style.backgroundColor = '#7f5af0'
+        }
       }
-    }
 
-    document.onload = checkPasswordMatch();
-  </script>
+      document.onload = checkPasswordMatch();
+    </script>
+  <% } %>
 </body>
 </html>
