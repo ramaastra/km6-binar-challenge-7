@@ -108,9 +108,10 @@ module.exports = {
     });
 
     const token = jwt.sign({ id }, process.env.JWT_SECRET);
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
     const html = renderHtml('forgot-password/email', {
       name,
-      token
+      resetPasswordUrl: `${baseUrl}/reset-password?token=${token}`
     });
 
     await sendEmail({
