@@ -5,25 +5,32 @@
 </head>
 <body>
   <div class="container">
-    <h1>Reset Your Password</h1>
-    <form action="" method="post">
-      <input
-        type="password"
-        name="password"
-        placeholder="Enter a new password"
-        required
-        oninput="checkPasswordMatch()"
-      />
-      <input 
-        type="password"
-        name="confirm-password"
-        placeholder="Confirm Password"
-        required
-        oninput="checkPasswordMatch()" 
-      />
-      <p id="password-mismatch">Password doesn't match</p>
-      <button>Update Password</button>
-    </form>
+    <% if (messages.info) { %>
+      <% if (messages.info == 'invalid') { %>
+          <h1>Invalid Token</h1>
+          <p>Please try again</p>
+      <% } %>
+    <% } else { %>
+      <h1>Reset Your Password</h1>
+      <form action="" method="post">
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter a new password"
+          required
+          oninput="checkPasswordMatch()"
+        />
+        <input 
+          type="password"
+          name="confirm-password"
+          placeholder="Confirm Password"
+          required
+          oninput="checkPasswordMatch()" 
+        />
+        <p id="password-mismatch">Password doesn't match</p>
+        <button>Update Password</button>
+      </form>
+    <% } %>
   </div>
 
   <script>
