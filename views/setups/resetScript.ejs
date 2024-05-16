@@ -1,0 +1,24 @@
+<script>
+  const password = document.querySelector('input[name="password"]');
+  const confirmPassword = document.querySelector('input[name="confirm-password"]');
+  const passwordMismatchMessage = document.querySelector('#password-mismatch');
+  const submitButton = document.querySelector('button');
+
+  function checkPasswordMatch() {
+    if (password.value !== confirmPassword.value || !password.value && !confirmPassword.value) {
+      passwordMismatchMessage.style.display = 'block';
+      submitButton.disabled = true;
+      submitButton.type = 'none';
+      submitButton.style.cursor = 'not-allowed'
+      submitButton.style.backgroundColor = '#584f74'
+    } else {
+      passwordMismatchMessage.style.display = 'none';
+      submitButton.type = 'submit';
+      submitButton.disabled = false;
+      submitButton.style.cursor = 'pointer'
+      submitButton.style.backgroundColor = '#7f5af0'
+    }
+  }
+
+  document.onload = checkPasswordMatch();
+</script>
