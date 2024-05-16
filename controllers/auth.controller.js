@@ -96,5 +96,10 @@ module.exports = {
     } catch (error) {
       next(error);
     }
+  },
+  sendResetPasswordLink: async (req, res, next) => {
+    const { email } = req.body;
+    req.flash('info', `Email sent to ${email}`);
+    res.redirect('/forgot-password');
   }
 };

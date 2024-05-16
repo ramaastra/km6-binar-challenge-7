@@ -1,12 +1,23 @@
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
+const flash = require('express-flash');
 const router = require('./router');
 const pageRouter = require('./router/page.routes');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.SESSION_SECRET
+  })
+);
+app.use(flash());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {

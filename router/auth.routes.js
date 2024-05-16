@@ -6,5 +6,6 @@ const router = Router();
 router.post('/register', auth.register);
 router.post('/login', auth.login);
 router.post('/whoami', restrict, auth.whoami);
+router.post('/forgot-password', auth.sendResetPasswordLink);
 
 module.exports = router;
