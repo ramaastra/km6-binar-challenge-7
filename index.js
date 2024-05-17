@@ -1,9 +1,13 @@
+require('./libs/sentry');
+
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const flash = require('express-flash');
 const http = require('http');
 const { Server } = require('socket.io');
+const Sentry = require('@sentry/node');
+const morgan = require('morgan');
 const router = require('./router');
 const pageRouter = require('./router/page.routes');
 
@@ -22,6 +26,7 @@ app.use(
 app.use(flash());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 app.set('view engine', 'ejs');
 
 app.use((req, res, next) => {
@@ -60,6 +65,8 @@ app.use((req, res, next) => {
 io.on('connection', (socket) => {
   console.log('A user connected');
 });
+
+Sentry.setupExpressErrorHandler(app);
 
 server.listen(port, () => {
   console.log(`Server is up and running at http://localhost:${port}`);
