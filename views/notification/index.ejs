@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../setups/head') %>
+  </head>
+  <body>
+    <div class="container notifications">
+      <% if (messages.error) { %>
+        <div>
+          <% if (messages.error == 'invalid') { %>
+            <h1>Couldn't fetch any notifications</h1>
+          <% } else if (messages.error == 'notFound') { %>
+            <h1>User not found</h1>
+          <% } %>
+          <p>Invalid <code>user_id</code> Query Params</p>
+        </div>
+      <% } else { %>
+          <header>
+            <h1>Notifications (<span>1</span>)</h1>
+            <span class="user">
+              <span>USER</span>
+              <p>John Doe</p>
+            </span>
+          </header>
+          <hr>
+          <ul class="notification-list" type="none">
+            <li class="notification unread">
+              <div class="head">
+                <b class="title">Password Updated</b>
+                <p class="created">17-05-2024</p>
+              </div>
+              <p class="detail">Your password was updated</p>
+            </li>
+            <li class="notification">
+              <div class="head">
+                <b class="title">Welcome!</b>
+                <p class="created">16:56</p>
+              </div>
+              <p class="detail">This account was created</p>
+            </li>
+          </ul>
+      <% } %>
+  </div>
+</body>
+</html>

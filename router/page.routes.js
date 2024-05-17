@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const notification = require('../controllers/notification.controller');
 const router = Router();
 
 router.get('/forgot-password', (req, res) => {
@@ -10,5 +11,7 @@ router.get('/reset-password', (req, res) => {
   if (!token) req.flash('info', 'invalid');
   res.render('forgot-password/reset', { token });
 });
+
+router.get('/notifications', notification.page);
 
 module.exports = router;
