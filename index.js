@@ -59,10 +59,6 @@ app.use((req, res, next) => {
 
 io.on('connection', (socket) => {
   console.log('A user connected');
-  // socket.on('notification', (notification) => {
-  //   console.log(`Server received: ${notification}`);
-  //   io.emit('notification', notification);
-  // });
 });
 
 server.listen(port, () => {
