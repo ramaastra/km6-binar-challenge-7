@@ -24,6 +24,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
 app.get('/', (req, res) => {
   res.status(200).json({
     status: true,
@@ -54,6 +59,10 @@ app.use((req, res, next) => {
 
 io.on('connection', (socket) => {
   console.log('A user connected');
+  // socket.on('notification', (notification) => {
+  //   console.log(`Server received: ${notification}`);
+  //   io.emit('notification', notification);
+  // });
 });
 
 server.listen(port, () => {

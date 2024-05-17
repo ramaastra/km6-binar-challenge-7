@@ -40,7 +40,7 @@ module.exports = {
         }
       });
 
-      io.emit(`notification-${user.id}`, notification);
+      req.io.emit(`notification-${user.id}`, notification);
 
       const baseUrl = `${req.protocol}://${req.get('host')}`;
       res.status(201).json({
@@ -186,7 +186,7 @@ module.exports = {
         }
 
         const hashedPassword = await generateHash(password);
-        await prisma.user.update({
+        const user = await prisma.user.update({
           data: { password: hashedPassword },
           where: { email },
           select: {
@@ -195,6 +195,15 @@ module.exports = {
             email: true
           }
         });
+
+        const notification = await prisma.notification.create({
+          data: {
+            title: 'Password Changed',
+            description: 'Your password has been updated.',
+            user: { connect: user }
+          }
+        });
+        req.io.emit(`notification-${user.id}`, notification);
 
         req.flash('info', 'success');
         res.redirect(`/reset-password?token=${token}`);
