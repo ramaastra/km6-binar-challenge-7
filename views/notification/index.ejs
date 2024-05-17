@@ -22,16 +22,22 @@
           <p><%= user.name %></p>
         </span>
       </header>
+
       <hr>
+      
       <ul class="notification-list" type="none">
-        <% for (notification of notifications) { %>
-          <li class="notification">
-            <div class="head">
-              <b class="title"><%= notification.title %></b>
-              <p class="created"><%= notification.createdAt %></p>
-            </div>
-            <p class="detail"><%= notification.description %></p>
-          </li>
+        <% if (!notifications.length) { %>
+          <p>There are no notifications for you.</p>
+        <% } else { %>
+          <% for (notification of notifications) { %>
+            <li class="notification">
+              <div class="head">
+                <b class="title"><%= notification.title %></b>
+                <p class="created"><%= notification.createdAt %></p>
+              </div>
+              <p class="detail"><%= notification.description %></p>
+            </li>
+          <% } %>
         <% } %>
       </ul>
     <% } %>
