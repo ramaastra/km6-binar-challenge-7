@@ -23,7 +23,10 @@ module.exports = {
       }
 
       const notifications = await prisma.notification.findMany({
-        where: { userId }
+        where: { userId },
+        orderBy: {
+          createdAt: 'desc'
+        }
       });
 
       const currentDate = new Date().toLocaleDateString();
