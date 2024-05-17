@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const { generateHash, compareHash } = require('../libs/bcrypt');
 const { sendEmail } = require('./mailer.controller');
 const { renderHtml } = require('../libs/ejs');
-const { io } = require('..');
 const prisma = new PrismaClient();
 
 module.exports = {
@@ -139,6 +138,16 @@ module.exports = {
       subject: 'Binar Challenge 7 - Reset Password',
       html
     });
+
+    const notification = await prisma.notification.create({
+      data: {
+        title: 'Reset Password Email Sent',
+        description:
+          'Please check your email to confirm your password reset action.',
+        user: { connect: user }
+      }
+    });
+    req.io.emit(`notification-${user.id}`, notification);
 
     req.flash('info', `Email sent to ${email}`);
     res.redirect('/forgot-password');

@@ -68,5 +68,3 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
   console.log(`Server is up and running at http://localhost:${port}`);
 });
-
-module.exports = { io };
