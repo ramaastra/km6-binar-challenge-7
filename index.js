@@ -2,10 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const flash = require('express-flash');
+const http = require('http');
+const { Server } = require('socket.io');
 const router = require('./router');
 const pageRouter = require('./router/page.routes');
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 const port = process.env.PORT || 3000;
 
 app.use(
@@ -48,6 +52,12 @@ app.use((req, res, next) => {
   });
 });
 
-app.listen(port, () => {
+io.on('connection', (socket) => {
+  console.log('A user connected');
+});
+
+server.listen(port, () => {
   console.log(`Server is up and running at http://localhost:${port}`);
 });
+
+module.exports = { io };

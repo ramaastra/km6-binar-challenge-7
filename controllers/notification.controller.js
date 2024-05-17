@@ -10,7 +10,13 @@ module.exports = {
         return res.render('notification');
       }
 
-      const user = await prisma.user.findUnique({ where: { id: userId } });
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          name: true
+        }
+      });
       if (!user) {
         req.flash('error', 'notFound');
         return res.render('notification');
@@ -20,7 +26,21 @@ module.exports = {
         where: { userId }
       });
 
-      res.render('notification', { name: user.name, notifications });
+      const currentDate = new Date().toLocaleDateString();
+      notifications.forEach((notification) => {
+        const createdAtDate = new Date(
+          notification.createdAt
+        ).toLocaleDateString();
+        if (currentDate === createdAtDate) {
+          notification.createdAt = new Date(
+            notification.createdAt
+          ).toLocaleTimeString();
+        } else {
+          notification.createdAt = createdAtDate;
+        }
+      });
+
+      res.render('notification', { user, notifications });
     } catch (error) {
       next(error);
     }

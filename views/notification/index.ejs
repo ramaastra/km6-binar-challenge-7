@@ -1,45 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('../setups/head') %>
-  </head>
-  <body>
-    <div class="container notifications">
-      <% if (messages.error) { %>
-        <div>
-          <% if (messages.error == 'invalid') { %>
-            <h1>Couldn't fetch any notifications</h1>
-          <% } else if (messages.error == 'notFound') { %>
-            <h1>User not found</h1>
-          <% } %>
-          <p>Invalid <code>user_id</code> Query Params</p>
-        </div>
-      <% } else { %>
-          <header>
-            <h1>Notifications (<span>1</span>)</h1>
-            <span class="user">
-              <span>USER</span>
-              <p>John Doe</p>
-            </span>
-          </header>
-          <hr>
-          <ul class="notification-list" type="none">
-            <li class="notification unread">
-              <div class="head">
-                <b class="title">Password Updated</b>
-                <p class="created">17-05-2024</p>
-              </div>
-              <p class="detail">Your password was updated</p>
-            </li>
-            <li class="notification">
-              <div class="head">
-                <b class="title">Welcome!</b>
-                <p class="created">16:56</p>
-              </div>
-              <p class="detail">This account was created</p>
-            </li>
-          </ul>
-      <% } %>
+<head>
+  <%- include('../setups/head') %>
+</head>
+<body>
+  <div class="container notifications">
+    <% if (messages.error) { %>
+      <div>
+        <% if (messages.error == 'invalid') { %>
+          <h1>Couldn't fetch any notifications</h1>
+        <% } else if (messages.error == 'notFound') { %>
+          <h1>User not found</h1>
+        <% } %>
+        <p>Invalid <code>user_id</code> Query Params</p>
+      </div>
+    <% } else { %>
+      <header>
+        <h1>Notifications <span class="new-notification-count"></span></h1>
+        <span class="user">
+          <span>USER</span>
+          <p><%= user.name %></p>
+        </span>
+      </header>
+      <hr>
+      <ul class="notification-list" type="none">
+        <% for (notification of notifications) { %>
+          <li class="notification">
+            <div class="head">
+              <b class="title"><%= notification.title %></b>
+              <p class="created"><%= notification.createdAt %></p>
+            </div>
+            <p class="detail"><%= notification.description %></p>
+          </li>
+        <% } %>
+      </ul>
+    <% } %>
   </div>
+
+  <% if (!messages.error) { %>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      const notificationContainer = document.querySelector('.notification-list');
+      const newNotificationCountContainer = document.querySelector('.new-notification-count');
+      let newNotificationCount = 0;
+      
+      function getCreatedAt(createdAt) {
+        const currentDate = new Date().toLocaleDateString();
+        const createdAtDate = new Date(createdAt).toLocaleDateString();
+        if (currentDate === createdAtDate) {
+          return new Date(createdAt).toLocaleTimeString();
+        } else {
+          return createdAtDate;
+        }
+      }
+
+      function createNotificationElement(notification) {
+        const title = document.createElement('b');
+        title.classList.add('title');
+        title.textContent = notification.title;
+        
+        const created = document.createElement('p');
+        created.classList.add('created');
+        created.textContent = getCreatedAt(notification.createdAt);
+
+        const head = document.createElement('div');
+        head.classList.add('head');
+        head.appendChild(title);
+        head.appendChild(created);
+        
+        const detail = document.createElement('p');
+        detail.classList.add('detail');
+        detail.textContent = notification.description;
+
+        const newNotification = document.createElement('li');
+        newNotification.classList.add('notification', 'unread');
+        newNotification.appendChild(head);
+        newNotification.appendChild(detail);
+
+        return newNotification;
+      }
+
+      socket.on('notification-<%= user.id %>', (notification) => {
+        const newNotification = createNotificationElement(notification)
+        notificationContainer.prepend(newNotification);
+        newNotificationCountContainer.textContent = `(${++newNotificationCount})`
+      });
+    </script>
+  <% } %>
 </body>
 </html>

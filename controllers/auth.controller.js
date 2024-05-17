@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const { generateHash, compareHash } = require('../libs/bcrypt');
 const { sendEmail } = require('./mailer.controller');
 const { renderHtml } = require('../libs/ejs');
+const { io } = require('..');
 const prisma = new PrismaClient();
 
 module.exports = {
@@ -31,10 +32,24 @@ module.exports = {
         }
       });
 
+      const notification = await prisma.notification.create({
+        data: {
+          title: 'Welcome New User!',
+          description: 'Your account was successfully created.',
+          user: { connect: user }
+        }
+      });
+
+      io.emit(`notification-${user.id}`, notification);
+
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
       res.status(201).json({
         status: true,
         message: 'User created',
-        data: user
+        data: {
+          user,
+          notification: `${baseUrl}/notifications?user_id=${user.id}`
+        }
       });
     } catch (error) {
       if (error.code === 'P2002') {
